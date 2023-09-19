@@ -1,4 +1,13 @@
 import { GetServerSideProps } from 'next/types';
+import {
+  Card,
+  Text,
+  CardBody,
+  Spinner,
+  Box,
+  SkeletonCircle,
+  SkeletonText,
+} from '@chakra-ui/react';
 
 type Repo = {
   name: string;
@@ -8,19 +17,29 @@ type Repo = {
 export const getServerSideProps = (async (context) => {
   const res = await fetch('https://api.github.com/repos/vercel/next.js');
   const repo = await res.json();
+  console.log('バックエンドでリクエストしてるよ');
+  console.log(repo);
   return { props: { repo } };
 }) satisfies GetServerSideProps<{
   repo: Repo;
 }>;
 
-const Sample = ({ repo }: { repo: any }) => {
+const Page = ({ repo }: { repo: any }) => {
   return (
-    <>
-      <h1>ほげほげ</h1>
-      <p>name: {repo.name}</p>
-      <p>stargazers_count: {repo.stargazers_count}</p>
-    </>
+    <Card>
+      <CardBody>
+        <Text>name: {repo.name}</Text>
+        <Text>stargazers_count: {repo.stargazers_count}</Text>
+      </CardBody>
+      <Spinner color='red.500' size='xl' />
+      <Spinner color='red.500' size='xl' />
+      <Spinner color='red.500' size='xl' />
+      <Box padding='6' boxShadow='lg' bg='white'>
+        <SkeletonCircle size='10' />
+        <SkeletonText mt='4' noOfLines={4} spacing='4' skeletonHeight='2' />
+      </Box>
+    </Card>
   );
 };
 
-export default Sample;
+export default Page;
