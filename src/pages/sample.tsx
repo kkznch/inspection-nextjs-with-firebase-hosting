@@ -1,18 +1,24 @@
 import { GetServerSideProps } from 'next/types';
 
-type SampleProp = {
-  message: string;
+type Repo = {
+  name: string;
+  stargazers_count: number;
 };
 
 export const getServerSideProps = (async (context) => {
-  return { props: { sampleProp: { message: 'SSR動かしてるなう' } } };
-}) satisfies GetServerSideProps<{ sampleProp: SampleProp }>;
+  const res = await fetch('https://api.github.com/repos/vercel/next.js');
+  const repo = await res.json();
+  return { props: { repo } };
+}) satisfies GetServerSideProps<{
+  repo: Repo;
+}>;
 
-const Sample = ({ sampleProp }: { sampleProp: any }) => {
+const Sample = ({ repo }: { repo: any }) => {
   return (
     <>
       <h1>ほげほげ</h1>
-      <p>message: {sampleProp.message}</p>
+      <p>name: {repo.name}</p>
+      <p>stargazers_count: {repo.stargazers_count}</p>
     </>
   );
 };
